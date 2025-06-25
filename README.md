@@ -26,6 +26,36 @@ Instead of failed predictions, 2.0.0 provides:
 3. **Multi-scenario planning**: Conservative, Expected, and High budget estimates
 4. **Seasonal awareness**: Monthly probability and amount adjustments
 
+```mermaid
+graph TD
+    A[Personal Expense Data] --> B{Traditional ML Approach}
+    B --> C[Random Forest]
+    B --> D[Gradient Boosting]
+    B --> E[Time Series]
+    C --> F[45% Error Rate]
+    D --> F
+    E --> F
+    F --> G[❌ Poor Performance]
+    
+    A --> H{Probability-Based Approach}
+    H --> I[Expense Probability Calculation]
+    H --> J[Expected Amount Modeling]
+    H --> K[Seasonal Adjustments]
+    I --> L[Conservative Estimate]
+    I --> M[Expected Estimate]
+    I --> N[High Estimate]
+    J --> L
+    J --> M
+    J --> N
+    K --> L
+    K --> M
+    K --> N
+    L --> O[✅ Budget Planning Framework]
+    M --> O
+    N --> O
+    O --> P[31.5% Better Performance]
+```
+
 ## 📁 Project Structure
 
 ```
@@ -62,6 +92,38 @@ Budget_Prediction/
 - **Probability models**: For irregular spending categories
 - **Historical baselines**: Trend and seasonal adjustments
 - **Robust fallbacks**: Multiple prediction methods ensure reliability
+
+```mermaid
+flowchart LR
+    A[Input: Year & Month] --> B{Category Type?}
+    
+    B -->|Major Categories<br/>>=10 months data| C[Time Series Model]
+    B -->|Irregular Categories<br/><10 months data| D[Probability Model]
+    B -->|Minor Categories<br/>Sparse data| E[Historical Baseline]
+    
+    C --> F[Linear Trend Analysis]
+    C --> G[Lagged Features]
+    C --> H[Rolling Averages]
+    
+    D --> I[Monthly Probability]
+    D --> J[Expected Amount]
+    D --> K[Seasonal Factors]
+    
+    E --> L[Simple Average]
+    E --> M[Frequency Weighting]
+    
+    F --> N[Prediction Ensemble]
+    G --> N
+    H --> N
+    I --> N
+    J --> N
+    K --> N
+    L --> N
+    M --> N
+    
+    N --> O[Final Category Predictions]
+    O --> P[Budget Recommendations]
+```
 
 ### Production API
 ```python
@@ -110,6 +172,38 @@ cd Budget_Prediction/2.0.0
    - Conservative estimate (minimum likely expenses)
    - Expected estimate (most probable expenses)
    - High estimate (safety buffer for planning)
+
+## 🔄 API Workflow
+
+```mermaid
+sequenceDiagram
+    participant U as User/Frontend
+    participant API as Budget Prediction API
+    participant M as Model (model.pkl)
+    participant D as Data Processing
+    
+    U->>API: get_expense_prediction_api(2025, 12)
+    API->>M: Load saved model
+    M-->>API: Model components loaded
+    
+    API->>D: Process input (year=2025, month=12)
+    D->>D: Feature engineering<br/>(seasonal, cyclical)
+    
+    loop For each category
+        D->>M: Get category prediction
+        M->>M: Apply probability model<br/>or time series model
+        M-->>D: Category prediction
+    end
+    
+    D->>API: All category predictions
+    API->>API: Generate budget scenarios<br/>(Conservative/Expected/High)
+    API->>API: Calculate summary statistics
+    
+    API-->>U: JSON Response:<br/>{success: true,<br/>predictions: {...},<br/>summary: {...}}
+    
+    Note over U,API: Total response time: ~50ms
+    Note over API,M: Supports 22 expense categories
+```
 
 ## 📊 Sample Results
 
@@ -200,6 +294,43 @@ Transport         |        12.30 |    19.80 |    28.90 | 42%
 - **1.0.5**: XGBoost implementation with web interface
 - **2.0.0**: Revolutionary probability-based methodology
 
+```mermaid
+timeline
+    title Budget Prediction Evolution
+    
+    section Initial Development
+        1.0.0 : Basic Linear Regression
+             : MAE: 125.8 AZN
+             : Exploration Phase
+    
+    section ML Implementation 
+        1.0.1 : Random Forest + Flask API
+             : MAE: 118.4 AZN
+             : +5.9% Improvement
+        
+        1.0.2 : Feature Engineering
+             : Streamlit Frontend
+             : MAE: 112.9 AZN
+             : +10.2% Improvement
+    
+    section Optimization
+        1.0.4 : Gradient Boosting
+             : Multi-component Architecture
+             : MAE: 98.7 AZN
+             : +21.6% Improvement
+        
+        1.0.5 : XGBoost + Hyperparameters
+             : Web Interface
+             : MAE: 91.5 AZN
+             : +27.3% Improvement
+    
+    section Revolution
+        2.0.0 : Probability-Based Methodology
+             : Budget Planning Framework
+             : MAE: 58.34 AZN
+             : +53.6% Total Improvement
+```
+
 ### Technical Advancement
 Each version improved upon previous limitations:
 - Better data preprocessing
@@ -230,11 +361,92 @@ Each version improved upon previous limitations:
 - **Probability framework**: Realistic uncertainty quantification
 - **Seasonal modeling**: Monthly pattern recognition
 
+```mermaid
+graph TB
+    subgraph "Data Layer"
+        A[Raw Transaction Data<br/>5,183 transactions]
+        B[22 Expense Categories]
+        C[3-year Historical Data<br/>2022-2025]
+    end
+    
+    subgraph "Processing Layer"
+        D[Data Preprocessing]
+        E[Feature Engineering]
+        F[Category Classification]
+    end
+    
+    subgraph "Model Layer"
+        G[Time Series Models<br/>Major Categories]
+        H[Probability Models<br/>Irregular Categories]
+        I[Baseline Models<br/>Minor Categories]
+    end
+    
+    subgraph "Prediction Layer"
+        J[Ensemble Predictions]
+        K[Seasonal Adjustments]
+        L[Confidence Intervals]
+    end
+    
+    subgraph "Output Layer"
+        M[Conservative Estimate]
+        N[Expected Estimate]
+        O[High Estimate]
+        P[API Response]
+    end
+    
+    A --> D
+    B --> D
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    F --> H
+    F --> I
+    G --> J
+    H --> J
+    I --> J
+    J --> K
+    K --> L
+    L --> M
+    L --> N
+    L --> O
+    M --> P
+    N --> P
+    O --> P
+```
+
 ### Data Science Methodology
 - **Root cause analysis**: Why traditional ML fails on personal data
 - **Alternative approach development**: Probability-based modeling
 - **Validation framework**: Comprehensive testing and comparison
 - **Production deployment**: API-ready implementation
+
+```mermaid
+flowchart TD
+    A[Problem: Personal Expense Prediction] --> B[Traditional ML Approach]
+    B --> C[Random Forest<br/>Gradient Boosting<br/>Time Series]
+    C --> D[Results: 45% Error Rate]
+    D --> E[Root Cause Analysis]
+    
+    E --> F[High Volatility<br/>CV > 1.0]
+    E --> G[Sporadic Patterns<br/>50% categories irregular]
+    E --> H[Event-Driven Spending<br/>Not predictable]
+    E --> I[Data Sparsity<br/>Limited observations]
+    
+    F --> J[Alternative Approach]
+    G --> J
+    H --> J
+    I --> J
+    
+    J --> K[Probability-Based Modeling]
+    K --> L[Expected Value = Probability × Amount]
+    L --> M[Budget Planning Framework]
+    M --> N[Results: 31.5% Better Performance]
+    
+    N --> O[Validation & Testing]
+    O --> P[Production Deployment]
+    P --> Q[API-Ready Implementation]
+```
 
 ## 🤝 Contributing
 
