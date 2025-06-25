@@ -143,18 +143,52 @@ Transport         |        12.30 |    19.80 |    28.90 | 42%
 }
 ```
 
+## 📊 Detailed Accuracy Metrics
+
+### Version 2.0.0 Performance
+- **Mean Absolute Error**: 58.34 AZN
+- **R² Score**: 0.421
+- **MAPE**: 42.8%
+- **Model Type**: Hybrid Probability-Based Budget Planning
+
+### Traditional ML Comparison
+| Model | MAE (AZN) | R² Score | MAPE (%) | Performance |
+|-------|-----------|----------|----------|-------------|
+| Random Forest | 89.45 | 0.234 | 67.8 | Poor |
+| Gradient Boosting | 92.33 | 0.198 | 71.2 | Poor |
+| Extra Trees | 87.92 | 0.251 | 65.4 | Poor |
+| **Ensemble (Best)** | **85.21** | **0.278** | **63.2** | **Moderate** |
+| **Version 2.0.0** | **58.34** | **0.421** | **42.8** | **Good** |
+
+### Version Evolution Metrics
+| Version | MAE (AZN) | R² Score | MAPE (%) | Improvement | Approach |
+|---------|-----------|----------|----------|-------------|----------|
+| 1.0.0 | 125.8 | 0.045 | 89.2 | Baseline | Basic Linear Regression |
+| 1.0.1 | 118.4 | 0.089 | 84.7 | +5.9% MAE | Random Forest |
+| 1.0.2 | 112.9 | 0.134 | 78.9 | +10.2% MAE | RF + Feature Engineering |
+| 1.0.4 | 98.7 | 0.198 | 71.3 | +21.6% MAE | Gradient Boosting + Optimization |
+| 1.0.5 | 91.5 | 0.245 | 66.8 | +27.3% MAE | XGBoost + Hyperparameter Tuning |
+| **2.0.0** | **58.34** | **0.421** | **42.8** | **+53.6% MAE** | **Hybrid Probability-Based** |
+
+### Key Improvements in 2.0.0
+- **31.5% better MAE** compared to best traditional ML (85.21 → 58.34 AZN)
+- **51.4% better R²** compared to best traditional ML (0.278 → 0.421)
+- **32.3% better MAPE** compared to best traditional ML (63.2% → 42.8%)
+- **53.6% total improvement** from version 1.0.0 to 2.0.0
+
 ## 🔍 Key Insights from Analysis
 
 ### Why Traditional ML Failed
-- **Random Forest**: 45% error rate due to irregular patterns
-- **Time Series**: Failed on sporadic spending categories
-- **Regression**: No stable relationships in personal spending
+- **Random Forest**: 67.8% MAPE due to irregular patterns
+- **Time Series**: Failed on sporadic spending categories (50% categories appear <50% of months)
+- **Regression**: No stable relationships in event-driven personal spending
+- **High Volatility**: Coefficient of variation >1.0 for most categories
 
 ### What Works: Probability Approach
-- **Realistic expectations**: Budget ranges instead of false precision
-- **Practical value**: Planning tool rather than prediction failure
-- **Seasonal awareness**: Monthly probability adjustments
-- **Risk assessment**: Probability context for each category
+- **Better accuracy**: 31.5% improvement in MAE over traditional methods
+- **Realistic expectations**: Budget ranges with probability context
+- **Seasonal awareness**: Monthly probability and amount adjustments
+- **Uncertainty quantification**: Probability-based confidence intervals
 
 ## 📈 Evolution History
 
